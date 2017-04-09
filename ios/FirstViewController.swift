@@ -1,6 +1,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Foundation
 
 
 
@@ -15,12 +16,12 @@ class FirstViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         
-        var location = CLLocationCoordinate2DMake(
+        let location = CLLocationCoordinate2DMake(
             47.809490,
             13.055010
         )
         
-        var annotation = ColorPointAnnotation(pinColor: UIColor.yellow)
+        let annotation = ColorPointAnnotation(pinColor: UIColor.yellow)
         
         annotation.coordinate = location
         annotation.title = "bla"
@@ -33,20 +34,30 @@ class FirstViewController: UIViewController {
         
         //let requestURL: NSURL = NSURL(string: "https://api.yellowdesks.com/hosts?format=json")!
         
-        let requestURL = NSURL( string: "https://api.yellowdesks.com/hosts?format=json")
-        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as! URL)
+        let requestURL = URL( string: "https://api.yellowdesks.com/hosts?format=json")!
+        
         
         let session = URLSession.shared
         
-        let task = session.dataTask(with: urlRequest as URLRequest) {
+        
+        
+        //let task = session.dataTask (with: urlRequest as URLRequest) {
+        
+        print("starting")
+        let task = session.dataTask(with: requestURL) {
             (data, response, error) -> Void in
-            
+        
+            print("done loading")
             let httpResponse = response as! HTTPURLResponse
             let statusCode = httpResponse.statusCode
             
             if (statusCode == 200) {
                 print("Everyone is fine, file downloaded successfully.")
-                print (data)
+                print ("mime: " + (httpResponse.mimeType)!)
+    
+                let dataString = String(data: data!, encoding: String.Encoding.utf8)
+                
+                print ("data: \(dataString)")
             }
         }
         
